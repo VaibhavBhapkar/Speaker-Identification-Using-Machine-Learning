@@ -1,3 +1,5 @@
+--------- This file include samples you collected to train your models ---------
+
 Nehal-sample0.wav
 Nehal-sample1.wav
 Nehal-sample2.wav
