@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov 28 17:29:44 2022
+
+@author: Ahsan Ali
+"""
+
 import os
 import wave
 import time
@@ -48,21 +55,21 @@ def extract_features(audio,rate):
 
 
 def record_audio_train():
-	Name =(input("Please Enter Your Name:"))
-	for count in range(5):
+	Name =(input("Please Enter Your Name: "))
+	for count in range(30):  #number of recordings are 30
 		FORMAT = pyaudio.paInt16
 		CHANNELS = 1
 		RATE = 44100
 		CHUNK = 512
 		RECORD_SECONDS = 10
-		device_index = 2
+# 		device_index = 2
 		audio = pyaudio.PyAudio()
 		print("----------------------record device list---------------------")
 		info = audio.get_host_api_info_by_index(0)
 		numdevices = info.get('deviceCount')
 		for i in range(0, numdevices):
-		        if (audio.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
-		            print("Input Device id ", i, " - ", audio.get_device_info_by_host_api_device_index(0, i).get('name'))
+		    if (audio.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
+		        print("Input Device id ", i, " - ", audio.get_device_info_by_host_api_device_index(0, i).get('name'))
 		print("-------------------------------------------------------------")
 		index = int(input())		
 		print("recording via index "+str(index))
@@ -96,7 +103,7 @@ def record_audio_test():
 	RATE = 44100
 	CHUNK = 512
 	RECORD_SECONDS = 10
-	device_index = 2
+# 	device_index = 2
 	audio = pyaudio.PyAudio()
 	print("----------------------record device list---------------------")
 	info = audio.get_host_api_info_by_index(0)
@@ -130,15 +137,20 @@ def record_audio_test():
 	waveFile.writeframes(b''.join(Recordframes))
 	waveFile.close()
 
+source_tr = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/training_set/"
+dest_tr = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/trained_models/"
+train_file_tr = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/training_set_addition.txt"
+
 def train_model():
 
-	source   = "C:\\Users\\Vaibhav\\Desktop\\SpeakerIdentification\\training_set\\"   
-	dest = "C:\\Users\\Vaibhav\\Desktop\\SpeakerIdentification\\trained_models\\"
-	train_file = "C:\\Users\\Vaibhav\\Desktop\\SpeakerIdentification\\training_set_addition.txt"        
+	source   = source_tr
+	dest = dest_tr
+	train_file = train_file_tr
+
 	file_paths = open(train_file,'r')
 	count = 1
 	features = np.asarray(())
-	for path in file_paths:    
+	for path in file_paths:
 	    path = path.strip()   
 	    print(path)
 
@@ -151,7 +163,7 @@ def train_model():
 	    else:
 	        features = np.vstack((features, vector))
 
-	    if count == 5:    
+	    if count == 5:       #number of recordings of a person
 	        gmm = GaussianMixture(n_components = 6, max_iter = 200, covariance_type='diag',n_init = 3)
 	        gmm.fit(features)
 	        
@@ -164,11 +176,14 @@ def train_model():
 	    count = count + 1
 
 
+source_test   = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/testing_set/"  
+modelpath_test = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/trained_models/"
+test_file_test = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/testing_set_addition.txt"
 def test_model():
 
-	source   = "C:\\Users\\Vaibhav\\Desktop\\SpeakerIdentification\\testing_set\\"  
-	modelpath = "C:\\Users\\Vaibhav\\Desktop\\SpeakerIdentification\\trained_models\\"
-	test_file = "C:\\Users\\Vaibhav\\Desktop\\SpeakerIdentification\\testing_set_addition.txt"       
+	source   = source_test
+	modelpath = modelpath_test
+	test_file = test_file_test
 	file_paths = open(test_file,'r')
 	 
 	gmm_files = [os.path.join(modelpath,fname) for fname in
@@ -210,4 +225,4 @@ while True:
 	elif(choice==4):
 		test_model()
 	if(choice>4):
-		exit()
+		break
