@@ -54,14 +54,14 @@ def extract_features(audio,rate):
     return combined
 
 
-def record_audio_train():
+def record_audio_train(recordings, duration):
 	Name =(input("Please Enter Your Name: "))
-	for count in range(30):  #number of recordings are 30
+	for count in range(recordings):  #number of recordings
 		FORMAT = pyaudio.paInt16
 		CHANNELS = 1
 		RATE = 44100
 		CHUNK = 512
-		RECORD_SECONDS = 10
+		RECORD_SECONDS = duration
 # 		device_index = 2
 		audio = pyaudio.PyAudio()
 		print("----------------------record device list---------------------")
@@ -96,13 +96,13 @@ def record_audio_train():
 		waveFile.writeframes(b''.join(Recordframes))
 		waveFile.close()
 
-def record_audio_test():
+def record_audio_test(duration):
 
 	FORMAT = pyaudio.paInt16
 	CHANNELS = 1
 	RATE = 44100
 	CHUNK = 512
-	RECORD_SECONDS = 10
+	RECORD_SECONDS = duration
 # 	device_index = 2
 	audio = pyaudio.PyAudio()
 	print("----------------------record device list---------------------")
@@ -137,9 +137,9 @@ def record_audio_test():
 	waveFile.writeframes(b''.join(Recordframes))
 	waveFile.close()
 
-source_tr = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/training_set/"
-dest_tr = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/trained_models/"
-train_file_tr = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/training_set_addition.txt"
+source_tr = "./training_set/"
+dest_tr = "./trained_models/"
+train_file_tr = "./training_set_addition.txt"
 
 def train_model():
 
@@ -176,9 +176,9 @@ def train_model():
 	    count = count + 1
 
 
-source_test   = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/testing_set/"  
-modelpath_test = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/trained_models/"
-test_file_test = "H:/Semester 7/ML/CEP/SI/Speaker-Identification-Using-Machine-Learning/testing_set_addition.txt"
+source_test   = "./testing_set/"  
+modelpath_test = "./trained_models/"
+test_file_test = "./testing_set_addition.txt"
 def test_model():
 
 	source   = source_test
@@ -215,14 +215,19 @@ def test_model():
 #choice=int(input("\n1.Record audio for training \n 2.Train Model \n 3.Record audio for testing \n 4.Test Model\n"))
   
 while True:
-	choice=int(input("\n 1.Record audio for training \n 2.Train Model \n 3.Record audio for testing \n 4.Test Model\n"))
-	if(choice==1):
-		record_audio_train()
-	elif(choice==2):
-		train_model()
-	elif(choice==3):
-		record_audio_test()
-	elif(choice==4):
-		test_model()
-	if(choice>4):
-		break
+    choice=int(input("\n 1.Record audio for training \n 2.Train Model \n 3.Record audio for testing \n 4.Test Model\n"))
+    if(choice==1):
+        recordings = int(input("Enter number of recordings: "))
+        duration = int(input("Enter duration in seconds: "))
+        record_audio_train(recordings, duration)
+        
+    elif(choice==2):
+        train_model()
+    elif(choice==3):
+        duration = int(input("Enter duration in seconds: "))
+        record_audio_test(duration)
+        
+    elif(choice==4):
+        test_model()
+    if(choice>4):
+        break
